@@ -1,0 +1,41 @@
+version: '2'
+
+services:
+  keycloak-db:
+    image: postgres:15.0
+    container_name: keycloak-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - "35433:5432"
+    volumes:
+      - keycloak-db-vol:/var/lib/postgresql/data
+
+  sso-authorization-server:
+    image: quay.io/keycloak/keycloak:24.0.1
+    container_name: sso-authorization-server
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: keycloak-db
+      DB_DATABASE: postgres
+      DB_USER: postgres
+      DB_SCHEMA: public
+      DB_PASSWORD: postgres
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    entrypoint: /opt/keycloak/bin/kc.sh start-dev --db postgres --db-url jdbc:postgresql://keycloak-db:5432/postgres --db-username postgres --db-password postgres --spi-login-protocol-openid-connect-legacy-logout-redirect-uri=true --spi-theme-static-max-age=-1 --spi-theme-cache-themes=false --spi-theme-cache-templates=false
+    ports:
+      - "8282:8080"
+      - "8555:8443"
+    depends_on:
+      keycloak-db:
+        condition: service_started
+
+volumes:
+  keycloak-db-vol:
+    driver: local
+

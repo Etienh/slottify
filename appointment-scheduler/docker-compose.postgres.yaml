@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+
+  postgres-db:
+    image: postgres:15.2
+    container_name: postgres-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - 25432:5432
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-db-vol:/var/lib/postgresql/data
+
+
+volumes:
+  postgres-db-vol:
+    driver: local
