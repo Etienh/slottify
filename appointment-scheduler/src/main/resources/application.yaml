@@ -22,8 +22,14 @@ spring:
 keycloak:
   server-url: http://localhost:8282
   realm: slottify
+  client-id: "slottify-client"
   admin:
     username: admin
     password: admin
-    client-id: slottify-client
+    client-id: "admin-cli"
 
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html

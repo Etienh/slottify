@@ -1,6 +1,7 @@
 package com.slottify.appointment_scheduler.controller;
 
 import com.slottify.appointment_scheduler.dto.LoginRequest;
+import com.slottify.appointment_scheduler.dto.RefreshTokenRequest;
 import com.slottify.appointment_scheduler.dto.RegisterUserRequest;
 import com.slottify.appointment_scheduler.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/login")
 @RequiredArgsConstructor
-public class UserController {
+public class LoginController {
 
     private final UserService userService;
 
@@ -66,6 +67,30 @@ public class UserController {
             return ResponseEntity.ok(response.getBody());
         } catch (HttpClientErrorException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        }
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        String tokenUrl = serverUrl + "/realms/" + realm + "/protocol/openid-connect/token";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+        form.add("grant_type", "refresh_token");
+        form.add("client_id", clientId);
+        form.add("refresh_token", request.getRefreshToken());
+
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(form, headers);
+
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(tokenUrl, HttpMethod.POST, entity, Map.class);
+            return ResponseEntity.ok(response.getBody());
+        } catch (HttpClientErrorException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired refresh token");
         }
     }
 

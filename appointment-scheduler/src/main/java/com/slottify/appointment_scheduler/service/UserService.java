@@ -24,6 +24,8 @@ public class UserService {
         UserRepresentation user = new UserRepresentation();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
         user.setEnabled(true);
 
         Response response = keycloak.realm(keycloakRealm).users().create(user);

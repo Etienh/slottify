@@ -32,14 +32,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .ignoringRequestMatchers("/login/register","/login/token", "/login/refresh"))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**",
+                        .requestMatchers("/swagger-ui/**", "/api-docs/**",
                                 "/configuration/ui",
                                 "/swagger-resources/**",
                                 "/configuration/security",
                                 "/swagger-ui.html",
-                                "/webjars/**").permitAll()
+                                "/webjars/**","/login/register","/login/token", "/login/refresh").permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(corsFilter(), CsrfFilter.class);
 
@@ -62,7 +63,7 @@ public class SecurityConfig {
 
         final var configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(List.of("localhost:8080"));
+        configuration.setAllowedOrigins(List.of("http://localhost:8080"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization,Link,X-Total-Count,X-RolesApplication-alert,X-RolesApplication-error,X-RolesApplication-params"));
@@ -71,7 +72,7 @@ public class SecurityConfig {
         final var source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", configuration);
         source.registerCorsConfiguration("/management/*", configuration);
-        source.registerCorsConfiguration("/v3/api-docs", configuration);
+        source.registerCorsConfiguration("/api-docs", configuration);
         source.registerCorsConfiguration("/swagger-ui/*", configuration);
         source.registerCorsConfiguration("/**", configuration);
 
