@@ -1,5 +1,6 @@
 package com.slottify.appointment_scheduler.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.slottify.appointment_scheduler.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,7 +8,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,8 +37,10 @@ public class Project extends BaseEntity {
     private boolean itemSharedCalendar;
     @Column(name = "time_slot")
     private Integer timeSlot;
+    @JsonIgnore
     @OneToMany(mappedBy = "project")
     private List<Item> items;
+    @JsonIgnore
     @OneToMany(mappedBy = "project")
     private List<Priority> priorities;
 
