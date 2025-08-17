@@ -23,7 +23,7 @@ public class UserProjectService {
 
 
     @Transactional
-    public UserProject create(CreateProjectRequest request){
+    public UserProject create(CreateProjectRequest request) throws Exception{
         User user = sessionUtils.getUserInSession();
         Project project = projectService.create(request);
         UserProject entityToSave = userProjectMapper.toEntity(user, project, AccessType.ADMIN);

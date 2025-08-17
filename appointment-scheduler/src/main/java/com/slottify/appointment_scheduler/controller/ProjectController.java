@@ -26,20 +26,20 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody UpdateProjectRequest request){
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody UpdateProjectRequest request) throws Exception{
         projectService.update(id, request);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @GetMapping
     public ResponseEntity<PageableResponse<Project>> getAll(@RequestParam(defaultValue = "1") int page,
-                                                            @RequestParam(defaultValue = "10") int size){
+                                                            @RequestParam(defaultValue = "10") int size) throws Exception{
         PageableResponse<Project> response = projectService.getAll(page, size);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Project> getById(@PathVariable UUID id){
+    public ResponseEntity<Project> getById(@PathVariable UUID id) throws Exception{
         Project response = projectService.getById(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

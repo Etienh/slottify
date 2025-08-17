@@ -20,7 +20,7 @@ public class UserProjectController {
     private final UserProjectService userProjectService;
 
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody CreateProjectRequest request){
+    public ResponseEntity<Void> create(@Valid @RequestBody CreateProjectRequest request) throws Exception{
         userProjectService.create(request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
