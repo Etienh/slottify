@@ -1,8 +1,10 @@
 package com.slottify.appointment_scheduler.service;
 
+import com.slottify.appointment_scheduler.common.SessionUtils;
 import com.slottify.appointment_scheduler.dto.RegisterUserRequest;
 import com.slottify.appointment_scheduler.entity.User;
 import com.slottify.appointment_scheduler.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.admin.client.Keycloak;
@@ -54,6 +56,10 @@ public class UserService {
 
         userRepository.save(dbUser);
 
+    }
+
+    public User getById(UUID userId){
+        return userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
     }
 
 
