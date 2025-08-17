@@ -24,6 +24,8 @@ import java.time.LocalTime;
 @Builder
 public class Shift extends BaseEntity {
 
+    @Column(name = "name")
+    private String name;
     @Column(nullable = false)
     private LocalTime startHour;
     @Column(nullable = false)

@@ -19,6 +19,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Priority extends BaseEntity {
 
+    @Column(name = "name")
+    private String name;
     @Column(nullable = false)
     private int level;
     @Column(name = "color")
