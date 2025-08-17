@@ -8,14 +8,18 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @Entity
 @Table(name = "project")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -38,4 +42,30 @@ public class Project extends BaseEntity {
     @OneToMany(mappedBy = "project")
     private List<Priority> priorities;
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Project project)) return false;
+        if (!super.equals(o)) return false;
+        return isStatus() == project.isStatus() && isUserSharedCalendar() == project.isUserSharedCalendar() && isItemSharedCalendar() == project.isItemSharedCalendar() && Objects.equals(getName(), project.getName()) && Objects.equals(getDescription(), project.getDescription()) && Objects.equals(getTimeSlot(), project.getTimeSlot()) && Objects.equals(getItems(), project.getItems()) && Objects.equals(getPriorities(), project.getPriorities());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getName(), getDescription(), isStatus(), isUserSharedCalendar(), isItemSharedCalendar(), getTimeSlot(), getItems(), getPriorities());
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + '\n' +
+                "Project{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", userSharedCalendar=" + userSharedCalendar +
+                ", itemSharedCalendar=" + itemSharedCalendar +
+                ", timeSlot=" + timeSlot +
+                ", items=" + items +
+                ", priorities=" + priorities +
+                '}';
+    }
 }

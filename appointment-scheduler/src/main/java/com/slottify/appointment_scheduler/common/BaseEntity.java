@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @MappedSuperclass
@@ -32,4 +33,25 @@ public abstract class BaseEntity {
     @Column(name = "modified_at", nullable = false)
     private LocalDateTime modifiedAt;
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BaseEntity that)) return false;
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getCreatedBy(), that.getCreatedBy()) && Objects.equals(getCreatedAt(), that.getCreatedAt()) && Objects.equals(getModifiedBy(), that.getModifiedBy()) && Objects.equals(getModifiedAt(), that.getModifiedAt());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCreatedBy(), getCreatedAt(), getModifiedBy(), getModifiedAt());
+    }
+
+    @Override
+    public String toString() {
+        return "BaseEntity{" +
+                "id=" + id +
+                ", createdBy='" + createdBy + '\'' +
+                ", createdAt=" + createdAt +
+                ", modifiedBy='" + modifiedBy + '\'' +
+                ", modifiedAt=" + modifiedAt +
+                '}';
+    }
 }
