@@ -4,6 +4,7 @@ import com.slottify.appointment_scheduler.dto.PageableResponse;
 import com.slottify.appointment_scheduler.dto.UpdateProjectRequest;
 import com.slottify.appointment_scheduler.entity.Project;
 import com.slottify.appointment_scheduler.service.ProjectService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping("/project")
 @RequiredArgsConstructor
 public class ProjectController {

@@ -33,3 +33,12 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
+  openapi:
+    components:
+      securitySchemes:
+        bearerAuth:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+    security:
+      - bearerAuth: []
