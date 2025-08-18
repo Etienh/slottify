@@ -11,9 +11,9 @@ import java.util.UUID;
 
 public interface ProjectRepository extends JpaRepository<Project, UUID> {
 
-    @Query(value = "SELECT p FROM project AS p JOIN user_project AS up ON up.user_id = :userId", nativeQuery = true)
+    @Query(value = "SELECT p FROM Project p JOIN UserProject up ON up.project = p WHERE up.id = :userId")
     Page<Project> findAllProjectForUser(@Param("userId") UUID userId, Pageable pageable);
 
-    @Query(value = "SELECT COUNT(p) FROM project AS p JOIN user_project AS up ON up.user_id = :userId WHERE p.name = :projectName", nativeQuery = true)
-    int isProjectNameAlreadyPresent(@Param("userId") UUID userId, @Param("projectName") String projectName);
+    @Query(value = "SELECT COUNT(p) > 0 FROM Project p JOIN UserProject up ON up.project = p WHERE up.user.id = :userId AND p.name = :projectName")
+    boolean isProjectNameAlreadyPresent(@Param("userId") UUID userId, @Param("projectName") String projectName);
 }

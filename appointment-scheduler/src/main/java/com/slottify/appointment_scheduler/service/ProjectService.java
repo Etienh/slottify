@@ -29,7 +29,7 @@ public class ProjectService {
     public Project create(CreateProjectRequest request) throws Exception{
         Project entityToSave = projectMapper.toEntity(request);
         if(isProjectNameAlreadyPresent(entityToSave.getName())){
-            throw new BadRequestException("project with name: " +  entityToSave.getName() +  "already exists");
+            throw new BadRequestException("project with name: " +  entityToSave.getName() +  " already exists");
         }
         return projectRepository.save(entityToSave);
     }
@@ -37,7 +37,7 @@ public class ProjectService {
     public Project update(UUID projectId, UpdateProjectRequest request) throws Exception{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new EntityNotFoundException("project not found"));
         if(request.getName() != null && isProjectNameAlreadyPresent(request.getName())){
-            throw new BadRequestException("project with name: " +  request.getName() +  "already exists");
+            throw new BadRequestException("project with name: " +  request.getName() +  " already exists");
         }
         Project updatedProject = projectMapper.updateProject(request, project);
         return projectRepository.save(updatedProject);
@@ -62,7 +62,7 @@ public class ProjectService {
 
     private boolean isProjectNameAlreadyPresent(String projectName){
         UUID userId = sessionUtils.getUserInSession().getId();
-        return projectRepository.isProjectNameAlreadyPresent(userId, projectName) > 0;
+        return projectRepository.isProjectNameAlreadyPresent(userId, projectName);
     }
 
 

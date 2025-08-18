@@ -23,7 +23,7 @@ import java.util.Objects;
 @Builder
 public class Priority extends BaseEntity {
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
     private int level;
