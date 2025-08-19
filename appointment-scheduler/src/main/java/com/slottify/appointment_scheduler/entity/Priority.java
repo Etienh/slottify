@@ -1,5 +1,6 @@
 package com.slottify.appointment_scheduler.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.slottify.appointment_scheduler.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,6 +30,7 @@ public class Priority extends BaseEntity {
     private int level;
     @Column(name = "color")
     private String color;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;

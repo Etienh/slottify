@@ -43,9 +43,9 @@ public class PriorityController {
     }
 
     @GetMapping
-    public ResponseEntity<PageableResponse<Priority>> getAll(@RequestParam(defaultValue = "1") int page,
+    public ResponseEntity<PageableResponse<Priority>> getAll(@RequestParam(defaultValue = "0") int page,
                                                              @RequestParam(defaultValue = "10") int size,
-                                                             @RequestParam(required = false) UUID projectId) throws Exception{
+                                                             @RequestParam UUID projectId) throws Exception{
         PageableResponse<Priority> response = priorityService.getAll(page, size, projectId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

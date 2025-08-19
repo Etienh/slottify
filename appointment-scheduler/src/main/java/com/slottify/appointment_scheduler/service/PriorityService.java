@@ -51,7 +51,7 @@ public class PriorityService {
         Page<Priority> priorityPage = priorityRepository.findAllPriorityForProject(projectId, pageRequest);
         return PageableResponse.<Priority>builder()
                 .elements(priorityPage.getContent())
-                .page(priorityPage.getNumber() + 1)
+                .page(priorityPage.getNumber())
                 .size(priorityPage.getSize())
                 .totalPages(priorityPage.getTotalPages())
                 .totalElements(priorityPage.getTotalElements())

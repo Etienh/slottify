@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface ProjectRepository extends JpaRepository<Project, UUID> {
 
-    @Query(value = "SELECT p FROM Project p JOIN UserProject up ON up.project = p WHERE up.id = :userId")
+    @Query(value = "SELECT p FROM Project p JOIN UserProject up ON up.project = p WHERE up.user.id = :userId")
     Page<Project> findAllProjectForUser(@Param("userId") UUID userId, Pageable pageable);
 
     @Query(value = "SELECT COUNT(p) > 0 FROM Project p JOIN UserProject up ON up.project = p WHERE up.user.id = :userId AND p.name = :projectName")

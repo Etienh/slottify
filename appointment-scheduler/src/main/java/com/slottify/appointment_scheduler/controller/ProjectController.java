@@ -34,7 +34,7 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<PageableResponse<Project>> getAll(@RequestParam(defaultValue = "1") int page,
+    public ResponseEntity<PageableResponse<Project>> getAll(@RequestParam(defaultValue = "0") int page,
                                                             @RequestParam(defaultValue = "10") int size) throws Exception{
         PageableResponse<Project> response = projectService.getAll(page, size);
         return new ResponseEntity<>(response, HttpStatus.OK);

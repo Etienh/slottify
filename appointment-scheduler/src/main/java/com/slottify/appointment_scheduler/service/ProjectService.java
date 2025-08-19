@@ -48,7 +48,7 @@ public class ProjectService {
         Page<Project> projectPage = projectRepository.findAllProjectForUser(sessionUtils.getUserInSession().getId(), pageRequest);
         return PageableResponse.<Project>builder().
                 elements(projectPage.getContent())
-                .page(projectPage.getNumber() + 1)
+                .page(projectPage.getNumber())
                 .size(projectPage.getSize())
                 .totalPages(projectPage.getTotalPages())
                 .totalElements(projectPage.getTotalElements())

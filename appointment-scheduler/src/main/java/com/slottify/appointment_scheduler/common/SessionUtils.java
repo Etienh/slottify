@@ -16,12 +16,15 @@ public class SessionUtils {
 
     private final UserRepository userRepository;
 
-    public User getUserInSession() {
+    public String getUsernameInSession() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth instanceof JwtAuthenticationToken jwtAuth) {
-            String preferredUsername = jwtAuth.getToken().getClaimAsString("preferred_username");
-            return userRepository.findByUsername(preferredUsername).orElseThrow(EntityExistsException::new);
+            return jwtAuth.getToken().getClaimAsString("preferred_username");
         }
         throw new NotAcceptableException("User not found in session");
+    }
+
+    public User getUserInSession() {
+        return userRepository.findByUsername(getUsernameInSession()).orElseThrow(EntityExistsException::new);
     }
 }

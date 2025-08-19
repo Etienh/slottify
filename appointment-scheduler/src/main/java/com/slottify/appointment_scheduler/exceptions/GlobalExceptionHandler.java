@@ -4,6 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -17,6 +19,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleBadRequest(BadRequestException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
+        StringBuilder errorMessage = new StringBuilder();
+        for (FieldError fr : e.getFieldErrors()){
+            errorMessage.append(fr.getField()).append(" : ").append(fr.getDefaultMessage()).append("\n");
+        }
+        return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
+    }
+
+
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleEntityNotFound(EntityNotFoundException e){
