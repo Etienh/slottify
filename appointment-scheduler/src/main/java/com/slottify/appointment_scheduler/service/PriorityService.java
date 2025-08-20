@@ -27,23 +27,23 @@ public class PriorityService {
     private final ProjectService projectService;
 
 
-    public Priority create(UUID projectId, CreatePriorityRequest request) throws Exception{
+    public void create(UUID projectId, CreatePriorityRequest request) throws Exception{
         Project project = projectService.getById(projectId);
         if(priorityRepository.isPriorityNameAlreadyPresent(projectId, request.getName())){
             throw new BadRequestException("priority with name: " + request.getName() + " already exists for project: " + project.getName());
         }
         Priority entityToSave = priorityMapper.toEntity(project, request);
-        return priorityRepository.save(entityToSave);
+        priorityRepository.save(entityToSave);
     }
 
-    public Priority update(UUID priorityId, UUID projectId, UpdatePriorityRequest request) throws Exception{
+    public void update(UUID priorityId, UUID projectId, UpdatePriorityRequest request) throws Exception{
         Priority priority = priorityRepository.findById(priorityId).orElseThrow(() -> new EntityNotFoundException("priority not found"));
         Priority updatedPriority = priorityMapper.updatePriority(request, priority);
         if(projectId != null){
             Project project = projectService.getById(projectId);
             updatedPriority.setProject(project);
         }
-        return priorityRepository.save(priority);
+        priorityRepository.save(priority);
     }
 
     public PageableResponse<Priority> getAll(int page, int size, UUID projectId){

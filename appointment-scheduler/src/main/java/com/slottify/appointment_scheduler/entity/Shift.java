@@ -1,5 +1,6 @@
 package com.slottify.appointment_scheduler.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.slottify.appointment_scheduler.common.BaseEntity;
 import com.slottify.appointment_scheduler.enums.ShiftType;
 import jakarta.persistence.Column;
@@ -27,7 +28,7 @@ import java.util.Objects;
 @Builder
 public class Shift extends BaseEntity {
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
     private LocalTime startHour;
@@ -36,6 +37,7 @@ public class Shift extends BaseEntity {
     @Column(length = 30, nullable = false)
     @Enumerated(EnumType.STRING)
     private ShiftType type;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_project_id")
     private UserProject userProject;

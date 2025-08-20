@@ -8,9 +8,12 @@ import com.slottify.appointment_scheduler.entity.UserProject;
 import com.slottify.appointment_scheduler.enums.AccessType;
 import com.slottify.appointment_scheduler.mapper.UserProjectMapper;
 import com.slottify.appointment_scheduler.repository.UserProjectRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,10 @@ public class UserProjectService {
         Project project = projectService.create(request);
         UserProject entityToSave = userProjectMapper.toEntity(user, project, AccessType.ADMIN);
         return userProjectRepository.save(entityToSave);
+    }
+
+    public UserProject getByProjectForUserInSession(UUID projectId) throws Exception{
+       return userProjectRepository.findByUserAndProject(sessionUtils.getUserInSession().getId(), projectId).orElseThrow(() -> new EntityNotFoundException("project for user not found"));
     }
 
 }
