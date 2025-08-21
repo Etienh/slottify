@@ -19,7 +19,7 @@ public interface AppointmentMapper {
     @Mapping(source = "request.description", target = "description")
     @Mapping(source = "request.phoneNumber", target = "phoneNumber")
     @Mapping(source = "userProject", target = "userProject")
-    @Mapping(source = "Item", target = "Item")
+    @Mapping(source = "item", target = "item")
     @Mapping(source = "priority", target = "priority")
     Appointment toEntity(UserProject userProject, CreateAppointmentRequest request, Item item, Priority priority);
 
