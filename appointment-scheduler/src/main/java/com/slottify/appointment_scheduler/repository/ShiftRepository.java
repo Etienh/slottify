@@ -13,9 +13,9 @@ import java.util.UUID;
 @Repository
 public interface ShiftRepository extends JpaRepository<Shift, UUID> {
 
-    @Query(value = "SELECT s FROM Shift s WHERE s.userProject.projectId = :projectId")
+    @Query(value = "SELECT s FROM Shift s JOIN UserProject up ON s.userProject = up WHERE up.project.id = :projectId")
     Page<Shift> findAllShiftForProject(@Param("projectId") UUID projectId, Pageable pageable);
 
-    @Query(value = "SELECT COUNT(s) > 0 FROM Shift s WHERE s.userProject.projectId = :projectId AND s.name = :shiftName")
+    @Query(value = "SELECT COUNT(s) > 0 FROM Shift s JOIN UserProject up ON s.userProject = up WHERE up.project.id = :projectId AND s.name = :shiftName")
     boolean isShiftNameAlreadyPresentForProject(@Param("projectId") UUID projectId, @Param("shiftName") String shiftName);
 }
