@@ -37,4 +37,8 @@ public class UserProjectService {
        return userProjectRepository.findByUserAndProject(sessionUtils.getUserInSession().getId(), projectId).orElseThrow(() -> new EntityNotFoundException("project for user not found"));
     }
 
+    public UserProject getByProjectAndUser(UUID projectId, UUID userId) throws Exception{
+        return userProjectRepository.findByUserAndProject(userId, projectId).orElseThrow(() -> new EntityNotFoundException("project for user not found"));
+    }
+
 }
