@@ -8,10 +8,14 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -21,6 +25,7 @@ public class UserService {
     private final Keycloak keycloak;
     private final String keycloakRealm;
     private final UserRepository userRepository;
+    private final SessionUtils sessionUtils;
 
     public void registerUser(RegisterUserRequest request) {
         UserRepresentation user = new UserRepresentation();
@@ -57,6 +62,25 @@ public class UserService {
         userRepository.save(dbUser);
 
     }
+
+    public void updateTokenProjectAttribute(UUID projectId) {
+        UUID userId = sessionUtils.getUserInSession().getId();
+        UserResource userRes = keycloak.realm(keycloakRealm).users().get(userId.toString());
+        UserRepresentation rep = userRes.toRepresentation();
+
+        Map<String, List<String>> attrs = rep.getAttributes();
+        if (attrs == null) attrs = new HashMap<>();
+
+        if (projectId == null) {
+            attrs.remove("projectId");
+        } else {
+            attrs.put("projectId", List.of(projectId.toString()));
+        }
+
+        rep.setAttributes(attrs);
+        userRes.update(rep);
+    }
+
 
     public User getById(UUID userId){
         return userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);

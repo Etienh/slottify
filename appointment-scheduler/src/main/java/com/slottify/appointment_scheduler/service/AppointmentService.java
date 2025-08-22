@@ -1,6 +1,5 @@
 package com.slottify.appointment_scheduler.service;
 
-import com.slottify.appointment_scheduler.common.SessionUtils;
 import com.slottify.appointment_scheduler.dto.CreateAppointmentRequest;
 import com.slottify.appointment_scheduler.dto.PageableResponse;
 import com.slottify.appointment_scheduler.dto.UpdateAppointmentRequest;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
