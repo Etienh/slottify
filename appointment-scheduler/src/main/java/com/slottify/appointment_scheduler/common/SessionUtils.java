@@ -1,9 +1,7 @@
 package com.slottify.appointment_scheduler.common;
 
-import com.slottify.appointment_scheduler.entity.Project;
 import com.slottify.appointment_scheduler.entity.User;
 import com.slottify.appointment_scheduler.repository.UserRepository;
-import com.slottify.appointment_scheduler.service.CacheService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.ws.rs.NotAcceptableException;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +17,6 @@ import java.util.UUID;
 public class SessionUtils {
 
     private final UserRepository userRepository;
-    private final CacheService cacheService;
 
     public String getUsernameInSession() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -43,9 +40,5 @@ public class SessionUtils {
 
     public User getUserInSession() {
         return userRepository.findByUsername(getUsernameInSession()).orElseThrow(EntityExistsException::new);
-    }
-
-    public Project getProjectInSession() throws Exception{
-        return cacheService.getUserProjectInSessionByUsername(getUsernameInSession(), getProjectIdInSession());
     }
 }
