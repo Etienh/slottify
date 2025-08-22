@@ -1,5 +1,6 @@
 package com.slottify.appointment_scheduler.controller;
 
+import com.slottify.appointment_scheduler.common.SessionUtils;
 import com.slottify.appointment_scheduler.dto.CreateShiftRequest;
 import com.slottify.appointment_scheduler.dto.PageableResponse;
 import com.slottify.appointment_scheduler.dto.UpdateShiftRequest;
@@ -28,27 +29,24 @@ import java.util.UUID;
 public class ShiftController {
 
     private final ShiftService shiftService;
+    private final SessionUtils sessionUtils;
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestParam UUID projectId,
-                                       @Valid @RequestBody CreateShiftRequest request) throws Exception {
-        shiftService.create(projectId, request);
+    public ResponseEntity<Void> create(@Valid @RequestBody CreateShiftRequest request) throws Exception {
+        shiftService.create(sessionUtils.getProjectIdInSession(), request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable UUID id,
-                                       @RequestParam(required = false) UUID projectId,
-                                       @Valid @RequestBody UpdateShiftRequest request) throws Exception {
-        shiftService.update(id, projectId, request);
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody UpdateShiftRequest request) throws Exception {
+        shiftService.update(id, request);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @GetMapping
     public ResponseEntity<PageableResponse<Shift>> getAll(@RequestParam(defaultValue = "0") int page,
-                                                          @RequestParam(defaultValue = "10") int size,
-                                                          @RequestParam UUID projectId) {
-        PageableResponse<Shift> response = shiftService.getAll(page, size, projectId);
+                                                          @RequestParam(defaultValue = "10") int size) {
+        PageableResponse<Shift> response = shiftService.getAll(page, size, sessionUtils.getProjectIdInSession());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -22,6 +22,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/login")
@@ -92,6 +93,12 @@ public class LoginController {
         } catch (HttpClientErrorException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired refresh token");
         }
+    }
+
+    @PostMapping("/updateProjectSession")
+    public ResponseEntity<Void> updateProjectInSession(UUID projectId){
+        userService.updateTokenProjectAttribute(projectId);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
 

@@ -33,13 +33,9 @@ public class ShiftService {
         shiftRepository.save(entityToSave);
     }
 
-    public void update(UUID shiftId, UUID projectId, UpdateShiftRequest request) throws Exception{
+    public void update(UUID shiftId, UpdateShiftRequest request) throws Exception{
         Shift shift = shiftRepository.findById(shiftId).orElseThrow(() -> new EntityNotFoundException("shift not found"));
         Shift updatedShift = shiftMapper.updateShift(request, shift);
-        if(projectId != null){
-            UserProject userProject = userProjectService.getByProjectForUserInSession(projectId);
-            updatedShift.setUserProject(userProject);
-        }
         shiftRepository.save(updatedShift);
     }
 

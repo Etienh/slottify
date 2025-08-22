@@ -1,5 +1,6 @@
 package com.slottify.appointment_scheduler.controller;
 
+import com.slottify.appointment_scheduler.common.SessionUtils;
 import com.slottify.appointment_scheduler.dto.CreateItemRequest;
 import com.slottify.appointment_scheduler.dto.PageableResponse;
 import com.slottify.appointment_scheduler.dto.UpdateItemRequest;
@@ -28,27 +29,24 @@ import java.util.UUID;
 public class ItemController {
 
     private final ItemService itemService;
+    private final SessionUtils sessionUtils;
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestParam UUID projectId,
-                                       @Valid @RequestBody CreateItemRequest request) throws Exception {
-        itemService.create(projectId, request);
+    public ResponseEntity<Void> create(@Valid @RequestBody CreateItemRequest request) throws Exception {
+        itemService.create(sessionUtils.getProjectIdInSession(), request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable UUID id,
-                                       @RequestParam(required = false) UUID projectId,
-                                       @Valid @RequestBody UpdateItemRequest request) throws Exception {
-        itemService.update(id, projectId, request);
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody UpdateItemRequest request) throws Exception {
+        itemService.update(id, request);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @GetMapping
     public ResponseEntity<PageableResponse<Item>> getAll(@RequestParam(defaultValue = "0") int page,
-                                                         @RequestParam(defaultValue = "10") int size,
-                                                         @RequestParam UUID projectId) throws Exception {
-        PageableResponse<Item> response = itemService.getAll(page, size, projectId);
+                                                         @RequestParam(defaultValue = "10") int size) throws Exception {
+        PageableResponse<Item> response = itemService.getAll(page, size, sessionUtils.getProjectIdInSession());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

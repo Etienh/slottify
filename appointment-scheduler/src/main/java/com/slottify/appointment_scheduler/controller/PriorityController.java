@@ -1,5 +1,6 @@
 package com.slottify.appointment_scheduler.controller;
 
+import com.slottify.appointment_scheduler.common.SessionUtils;
 import com.slottify.appointment_scheduler.dto.CreatePriorityRequest;
 import com.slottify.appointment_scheduler.dto.PageableResponse;
 import com.slottify.appointment_scheduler.dto.UpdatePriorityRequest;
@@ -28,17 +29,18 @@ import java.util.UUID;
 public class PriorityController {
 
     private final PriorityService priorityService;
+    private final SessionUtils sessionUtils;
 
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestParam UUID projectId, @Valid @RequestBody CreatePriorityRequest request) throws Exception{
-        priorityService.create(projectId, request);
+    public ResponseEntity<Void> create(@Valid @RequestBody CreatePriorityRequest request) throws Exception{
+        priorityService.create(sessionUtils.getProjectIdInSession(), request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable UUID id, @RequestParam(required = false) UUID projectId, @Valid @RequestBody UpdatePriorityRequest request) throws Exception{
-        priorityService.update(id, projectId, request);
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody UpdatePriorityRequest request) throws Exception{
+        priorityService.update(id, request);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 

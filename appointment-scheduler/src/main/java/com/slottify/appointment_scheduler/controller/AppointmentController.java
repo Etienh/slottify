@@ -1,6 +1,7 @@
 package com.slottify.appointment_scheduler.controller;
 
 
+import com.slottify.appointment_scheduler.common.SessionUtils;
 import com.slottify.appointment_scheduler.dto.CreateAppointmentRequest;
 import com.slottify.appointment_scheduler.dto.PageableResponse;
 import com.slottify.appointment_scheduler.dto.UpdateAppointmentRequest;
@@ -29,25 +30,24 @@ import java.util.UUID;
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
+    private final SessionUtils sessionUtils;
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestParam(required = false) UUID userId,
-                                       @RequestParam UUID projectId,
                                        @RequestParam(required = false) UUID itemId,
                                        @RequestParam(required = false) UUID priorityId,
                                        @Valid @RequestBody CreateAppointmentRequest request) throws Exception {
-        appointmentService.create(userId, projectId, itemId, priorityId, request);
+        appointmentService.create(userId, sessionUtils.getProjectIdInSession(), itemId, priorityId, request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable("id") UUID appointmentId,
                                        @RequestParam(required = false) UUID userId,
-                                       @RequestParam UUID projectId,
                                        @RequestParam(required = false) UUID itemId,
                                        @RequestParam(required = false) UUID priorityId,
                                        @Valid @RequestBody UpdateAppointmentRequest request) throws Exception {
-        appointmentService.update(userId, projectId, itemId, priorityId, appointmentId, request);
+        appointmentService.update(userId, sessionUtils.getProjectIdInSession(), itemId, priorityId, appointmentId, request);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
@@ -66,9 +66,8 @@ public class AppointmentController {
     @GetMapping
     public ResponseEntity<PageableResponse<Appointment>> getAllFiltered(@RequestParam(defaultValue = "0") int page,
                                                                         @RequestParam(defaultValue = "10") int size,
-                                                                        @RequestParam UUID projectId,
                                                                         @RequestParam(required = false) UUID userId) throws Exception {
-        var response = appointmentService.getAllFiltered(page, size, projectId, userId);
+        var response = appointmentService.getAllFiltered(page, size, sessionUtils.getProjectIdInSession(), userId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

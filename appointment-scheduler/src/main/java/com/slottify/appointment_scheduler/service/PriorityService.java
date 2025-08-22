@@ -36,14 +36,10 @@ public class PriorityService {
         priorityRepository.save(entityToSave);
     }
 
-    public void update(UUID priorityId, UUID projectId, UpdatePriorityRequest request) throws Exception{
+    public void update(UUID priorityId, UpdatePriorityRequest request) throws Exception{
         Priority priority = priorityRepository.findById(priorityId).orElseThrow(() -> new EntityNotFoundException("priority not found"));
         Priority updatedPriority = priorityMapper.updatePriority(request, priority);
-        if(projectId != null){
-            Project project = projectService.getById(projectId);
-            updatedPriority.setProject(project);
-        }
-        priorityRepository.save(priority);
+        priorityRepository.save(updatedPriority);
     }
 
     public PageableResponse<Priority> getAll(int page, int size, UUID projectId){

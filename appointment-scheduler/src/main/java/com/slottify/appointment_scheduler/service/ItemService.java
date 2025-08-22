@@ -29,14 +29,10 @@ public class ItemService {
         itemRepository.save(entityToSave);
     }
 
-    public void update(UUID itemId, UUID projectId, UpdateItemRequest request) throws Exception{
+    public void update(UUID itemId, UpdateItemRequest request) throws Exception{
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new EntityNotFoundException("item not found"));
         Item updateItem = itemMapper.updateItem(request, item);
-        if(projectId != null){
-            Project project = projectService.getById(projectId);
-            updateItem.setProject(project);
-        }
-        itemRepository.save(item);
+        itemRepository.save(updateItem);
     }
 
     public PageableResponse<Item> getAll(int page, int size, UUID projectId) throws Exception{
