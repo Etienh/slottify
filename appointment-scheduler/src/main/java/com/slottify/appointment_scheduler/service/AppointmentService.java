@@ -12,6 +12,7 @@ import com.slottify.appointment_scheduler.exceptions.BadRequestException;
 import com.slottify.appointment_scheduler.mapper.AppointmentMapper;
 import com.slottify.appointment_scheduler.repository.AppointmentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +34,7 @@ public class AppointmentService {
     private final ProjectService projectService;
 
 
+    @Transactional
     public void create(UUID userId, UUID projectId, UUID itemId, UUID priorityId, CreateAppointmentRequest request) throws Exception{
         UserProject userProject = userId != null ? userProjectService.getByProjectAndUser(projectId, userId) : userProjectService.getByProjectForUserInSession(projectId);
         Item item  = itemId != null ? itemService.getById(itemId) : null;
@@ -46,6 +48,7 @@ public class AppointmentService {
 
     }
 
+    @Transactional
     public void update(UUID userId, UUID projectId, UUID itemId, UUID priorityId, UUID appointmentId,  UpdateAppointmentRequest request) throws Exception{
         Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> new EntityNotFoundException("appointment not found"));
         Appointment updatedAppointment = appointmentMapper.updateAppointment(request, appointment);
@@ -59,20 +62,20 @@ public class AppointmentService {
             updatedAppointment.setPriority(priorityService.getById(priorityId));
         }
         if(request.getStartDateTime() != null && request.getEndDateTime() != null &&
-            isAppointmentOverlapping(updatedAppointment.getUserProject().getId(), projectId, updatedAppointment.getItem().getId(),
+            isAppointmentOverlapping(updatedAppointment.getUserProject().getUser().getId(), projectId, updatedAppointment.getItem().getId() == null ? null : updatedAppointment.getItem().getId(),
                     updatedAppointment.getStartDateTime(), updatedAppointment.getEndDateTime(), updatedAppointment.getId())){
             throw new BadRequestException("an appointment for user or item already exists during this date and time");
         }
         appointmentRepository.save(updatedAppointment);
     }
 
-    public void UnassignItem(UUID appointmentId) throws Exception{
+    public void unassignItem(UUID appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> new EntityNotFoundException("appointment not found"));
         appointment.setItem(null);
         appointmentRepository.save(appointment);
     }
 
-    public void UnassignPriority(UUID appointmentId) throws Exception{
+    public void unassignPriority(UUID appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> new EntityNotFoundException("appointment not found"));
         appointment.setPriority(null);
         appointmentRepository.save(appointment);

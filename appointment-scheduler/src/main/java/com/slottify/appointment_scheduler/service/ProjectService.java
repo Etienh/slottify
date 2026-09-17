@@ -9,6 +9,7 @@ import com.slottify.appointment_scheduler.exceptions.BadRequestException;
 import com.slottify.appointment_scheduler.mapper.ProjectMapper;
 import com.slottify.appointment_scheduler.repository.ProjectRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ public class ProjectService {
     private final ProjectMapper projectMapper;
     private final SessionUtils sessionUtils;
 
+    @Transactional
     public Project create(CreateProjectRequest request) throws Exception{
         Project entityToSave = projectMapper.toEntity(request);
         if(isProjectNameAlreadyPresent(entityToSave.getName())){
@@ -34,6 +36,7 @@ public class ProjectService {
         return projectRepository.save(entityToSave);
     }
 
+    @Transactional
     public void update(UUID projectId, UpdateProjectRequest request) throws Exception{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new EntityNotFoundException("project not found"));
         if(request.getName() != null && isProjectNameAlreadyPresent(request.getName())){
@@ -43,7 +46,7 @@ public class ProjectService {
         projectRepository.save(updatedProject);
     }
 
-    public PageableResponse<Project> getAll(int page, int size) throws Exception{
+    public PageableResponse<Project> getAll(int page, int size){
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Project> projectPage = projectRepository.findAllProjectForUser(sessionUtils.getUserInSession().getId(), pageRequest);
         return PageableResponse.<Project>builder().

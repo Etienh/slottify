@@ -53,13 +53,13 @@ public class AppointmentController {
 
     @PatchMapping("/{id}/unassign-item")
     public ResponseEntity<Void> unassignItem(@PathVariable("id") UUID appointmentId) throws Exception {
-        appointmentService.UnassignItem(appointmentId);
+        appointmentService.unassignItem(appointmentId);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @PatchMapping("/{id}/unassign-priority")
     public ResponseEntity<Void> unassignPriority(@PathVariable("id") UUID appointmentId) throws Exception {
-        appointmentService.UnassignPriority(appointmentId);
+        appointmentService.unassignPriority(appointmentId);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 

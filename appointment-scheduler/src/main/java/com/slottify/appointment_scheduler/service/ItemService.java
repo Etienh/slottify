@@ -8,6 +8,7 @@ import com.slottify.appointment_scheduler.entity.Project;
 import com.slottify.appointment_scheduler.mapper.ItemMapper;
 import com.slottify.appointment_scheduler.repository.ItemRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,19 +24,21 @@ public class ItemService {
     private final ItemMapper itemMapper;
     private final ProjectService projectService;
 
+    @Transactional
     public void create(UUID projectId, CreateItemRequest request) throws Exception{
         Project project = projectService.getById(projectId);
         Item entityToSave = itemMapper.toEntity(project, request);
         itemRepository.save(entityToSave);
     }
 
+    @Transactional
     public void update(UUID itemId, UpdateItemRequest request) throws Exception{
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new EntityNotFoundException("item not found"));
         Item updateItem = itemMapper.updateItem(request, item);
         itemRepository.save(updateItem);
     }
 
-    public PageableResponse<Item> getAll(int page, int size, UUID projectId) throws Exception{
+    public PageableResponse<Item> getAll(int page, int size, UUID projectId){
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Item> itemPage = itemRepository.findAllItemsForProject(projectId, pageRequest);
         return PageableResponse.<Item>builder()

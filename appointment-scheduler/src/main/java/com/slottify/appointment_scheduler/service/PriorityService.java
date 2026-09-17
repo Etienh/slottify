@@ -9,6 +9,7 @@ import com.slottify.appointment_scheduler.exceptions.BadRequestException;
 import com.slottify.appointment_scheduler.mapper.PriorityMapper;
 import com.slottify.appointment_scheduler.repository.PriorityRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ public class PriorityService {
     private final ProjectService projectService;
 
 
+    @Transactional
     public void create(UUID projectId, CreatePriorityRequest request) throws Exception{
         Project project = projectService.getById(projectId);
         if(priorityRepository.isPriorityNameAlreadyPresent(projectId, request.getName())){
@@ -36,6 +38,7 @@ public class PriorityService {
         priorityRepository.save(entityToSave);
     }
 
+    @Transactional
     public void update(UUID priorityId, UpdatePriorityRequest request) throws Exception{
         Priority priority = priorityRepository.findById(priorityId).orElseThrow(() -> new EntityNotFoundException("priority not found"));
         Priority updatedPriority = priorityMapper.updatePriority(request, priority);
@@ -54,7 +57,7 @@ public class PriorityService {
                 .build();
     }
 
-    public Priority getById(UUID priorityId){
+    public Priority getById(UUID priorityId) throws Exception{
         return priorityRepository.findById(priorityId).orElseThrow(() -> new EntityNotFoundException("priority not found"));
     }
 

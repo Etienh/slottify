@@ -9,6 +9,7 @@ import com.slottify.appointment_scheduler.exceptions.BadRequestException;
 import com.slottify.appointment_scheduler.mapper.ShiftMapper;
 import com.slottify.appointment_scheduler.repository.ShiftRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,7 @@ public class ShiftService {
     private final ShiftMapper shiftMapper;
     private final UserProjectService userProjectService;
 
+    @Transactional
     public void create(UUID projectId, CreateShiftRequest request) throws Exception{
         UserProject userProject = userProjectService.getByProjectForUserInSession(projectId);
         if(shiftRepository.isShiftNameAlreadyPresentForProject(projectId, request.getName())){
@@ -33,6 +35,7 @@ public class ShiftService {
         shiftRepository.save(entityToSave);
     }
 
+    @Transactional
     public void update(UUID shiftId, UpdateShiftRequest request) throws Exception{
         Shift shift = shiftRepository.findById(shiftId).orElseThrow(() -> new EntityNotFoundException("shift not found"));
         Shift updatedShift = shiftMapper.updateShift(request, shift);
