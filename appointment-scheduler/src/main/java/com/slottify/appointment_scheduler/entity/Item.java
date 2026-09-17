@@ -11,14 +11,17 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Entity
 @Table(name = "item")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -36,4 +39,28 @@ public class Item extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Item item)) return false;
+        if (!super.equals(o)) return false;
+        return Objects.equals(getName(), item.getName()) && Objects.equals(getDescription(), item.getDescription()) && Objects.equals(getAttributes(), item.getAttributes()) && Objects.equals(getTimeSlot(), item.getTimeSlot()) && Objects.equals(getProject(), item.getProject());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getName(), getDescription(), getAttributes(), getTimeSlot(), getProject());
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + '\n' +
+                "Item{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", attributes=" + attributes +
+                ", timeSlot=" + timeSlot +
+                ", project=" + project +
+                '}';
+    }
 }

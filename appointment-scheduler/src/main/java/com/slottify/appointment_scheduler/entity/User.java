@@ -2,7 +2,6 @@ package com.slottify.appointment_scheduler.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -21,7 +20,6 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue
     private UUID id;
     @Column(length = 50, nullable = false, unique = true)
     private String username;
