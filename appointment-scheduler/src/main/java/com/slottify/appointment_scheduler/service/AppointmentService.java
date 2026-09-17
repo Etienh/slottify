@@ -62,7 +62,7 @@ public class AppointmentService {
             updatedAppointment.setPriority(priorityService.getById(priorityId));
         }
         if(request.getStartDateTime() != null && request.getEndDateTime() != null &&
-            isAppointmentOverlapping(updatedAppointment.getUserProject().getUser().getId(), projectId, updatedAppointment.getItem().getId() == null ? null : updatedAppointment.getItem().getId(),
+            isAppointmentOverlapping(updatedAppointment.getUserProject().getUser().getId(), projectId, updatedAppointment.getItem() == null ? null : updatedAppointment.getItem().getId(),
                     updatedAppointment.getStartDateTime(), updatedAppointment.getEndDateTime(), updatedAppointment.getId())){
             throw new BadRequestException("an appointment for user or item already exists during this date and time");
         }
